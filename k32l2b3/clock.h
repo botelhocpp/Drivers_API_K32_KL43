@@ -43,4 +43,6 @@ extern void clkSetMainClock(clock_source clock_source);
 
 extern long clkGetMainClock();
 
+extern long clkGetERClock();
+
 #endif

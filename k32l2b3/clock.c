@@ -101,13 +101,24 @@ long clkGetMainClock() {
 		case 2:
 
 			// OSCILLATOR
-			if(MCG->C2 & 0b01U << 2) {
+			if(MCG->C2 & 1U << 2) {
 				return ((MCG->S & (1U << 1)) && (OSC0->CR & (1U << 7))) ? CLK_SOURCE_OSCERCLK_FREQ : 0;
 			}
 			// EXTERNAL CLOCK
 			else {
 				// TODO
 			}
+	}
+	return 0;
+}
+
+long clkGetERClock() {
+	if(MCG->C2 & 1U << 2) {
+		return (OSC0->CR & (1U << 7)) ? CLK_SOURCE_OSCERCLK_FREQ : 0;
+	}
+	// EXTERNAL CLOCK
+	else {
+		// TODO
 	}
 	return 0;
 }

@@ -23,8 +23,8 @@ long drvCpuClockCounts() {
  * @brief Inits the clock of the processor at 48 MHz.
  */
 void drvCpuClockInit(void) {
-	clkEnableClock(clkSOURCE_HIRCLK);
-	clkSetMainClock(clkSOURCE_HIRCLK);
+	clkEnableClock(clkSOURCE_LIRCLK_8MHz);
+	clkSetMainClock(clkSOURCE_LIRCLK_8MHz);
 }
 
 /*!
