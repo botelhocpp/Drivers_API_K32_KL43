@@ -8,7 +8,6 @@
 // PRIVATE STATIC VARIABLES
 // =========================================================================
 
-static pin_handler_t drv_led_power;
 static pin_handler_t drv_led_green;
 static pin_handler_t drv_led_red;
 
