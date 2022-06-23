@@ -1,8 +1,8 @@
 #include "lcd.h"
 
-#include "general_api/delay.h"
-#include "k32_api/gpio.h"
-#include "k32_api/clock.h"
+#include "delay.h"
+#include "gpio.h"
+#include "clock.h"
 
 // ==========================================================================
 // LCD INSTRUCTION CODES
@@ -31,6 +31,100 @@
 
 #define CURSOR_START_FIRST_LINE				0x80
 #define CURSOR_START_SECOND_LINE			0xC0
+
+#define MEMORY_SET_CGRAM					0x40
+
+// ==========================================================================
+// PRIVATE VARIABLES
+// ==========================================================================
+const uint8_t big_numbers_codes[] = {
+
+								 0b00000001,//0
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00011111,
+								 0b00000000,
+
+								 0b00011111,//1
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00000000,
+
+								 0b00011111,//2
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000000,
+
+								 0b00000001,//3
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000000,
+
+								 0b00011111,//4
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00011111,
+								 0b00000000,
+
+								 0b00011111,//5
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00000001,
+								 0b00011111,
+								 0b00000000,
+
+								 0b00011111,//6
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+								 0b00000000,
+
+								 0b00011111,//7
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00010000,
+								 0b00011111,
+								 0b00000000
+};
+
+static const uint8_t big_numbers_commands[10][4] =
+{
+		{0x01, 0x02, 0x4C, 0x00}, //nr. 0
+		{0x20, 0x7C, 0x20, 0x7C}, //nr. 1
+		{0x04, 0x05, 0x4C, 0x5F}, //nr. 2
+		{0x06, 0x05, 0x5F, 0x00}, //nr. 3
+		{0x4C, 0x00, 0x20, 0x03}, //nr. 4
+		{0x07, 0x04, 0x5F, 0x00}, //nr. 5
+		{0x07, 0x04, 0x4C, 0x00}, //nr. 5
+		{0x06, 0x02, 0x20, 0x03}, //nr. 7
+		{0x07, 0x05, 0x4C, 0x00}, //nr. 8
+		{0x07, 0x05, 0x20, 0x03}  //nr. 9
+};
 
 // ==========================================================================
 // PRIVATE FUNCTIONS PROTOTYPES
@@ -110,16 +204,36 @@ void lcdScrollRight(lcd_handler_t *lcd) {
 	lcdSendCommand(lcd, SHIFT_MESSAGE_RIGHT);
 }
 
-void lcdCreateChar(lcd_handler_t *lcd, uint8_t location, char *char_map) {
 
+void lcdCreateChar(lcd_handler_t *lcd, lcd_custom_char custom_char, char *char_map) {
+	if(custom_char > lcdCUSTOM_CHAR_8 || custom_char < lcdCUSTOM_CHAR_1) {
+		while(1);
+	}
+
+	lcdSendCommand(lcd, MEMORY_SET_CGRAM | (custom_char << 3));
+
+	for (int i = 0; i<8; i++) {
+		lcdSendData(lcd, char_map[i]);
+	}
 }
 
 void lcdCreateBigNumbers(lcd_handler_t *lcd) {
 
+	for (int i = 0, j = 0; i < 8; i++) {
+		lcdCreateChar(lcd, i, &big_numbers_codes[j]);
+		j += 8;
+	}
 }
 
 void lcdWriteBigNumber(lcd_handler_t *lcd, uint8_t columm, uint8_t number) {
 
+	lcdSetCursor(lcd, columm, 0);
+	lcdSendData(lcd, big_numbers_commands[number][0]);
+	lcdSendData(lcd, big_numbers_commands[number][1]);
+
+	lcdSetCursor(lcd, columm, 1);
+	lcdSendData(lcd, big_numbers_commands[number][2]);
+	lcdSendData(lcd, big_numbers_commands[number][3]);
 }
 
 // ==========================================================================

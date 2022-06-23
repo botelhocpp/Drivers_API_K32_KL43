@@ -1,24 +1,32 @@
 #include "delay.h"
-#include "k32_api/clock.h"
+#include "clock.h"
 
-/*
- * Tempo = Nciclocs x (1/f)
- * tempo/(f) = Nciclos
- * tempo_ms*f/1000 = Nciclos
- * 1ms*(8.000.000)/3*1000 = 2666,67
+/**!
+ * @brief 	Makes the CPU wait for a given time in
+ * 		  	milliseconds (occupies the CPU during
+ * 		  	that time).
+ * @parameters The delay time in milliseconds.
  */
 void delay_ms(uint32_t ms) {
 	int iterations = (int) clkGetMainClock()/3000;
 
 	for(int i = 0; i < ms; i++) {
+		// tempo_ms*f/1000 = N_cycles = 3*iterations
 		for(int j = 0; j < iterations; j++);
 	}
 }
 
+/**!
+ * @brief 	Makes the CPU wait for a given time in
+ * 		  	microseconds (occupies the CPU during
+ * 		  	that time).
+ * @parameters The delay time in microseconds.
+ */
 void delay_us(uint32_t us) {
 	int iterations = (int) clkGetMainClock()/3000000;
 
 	for(int i = 0; i < us; i++) {
+		// tempo_us*f/1000000 = N_cycles = 3*iterations
 		for(int j = 0; j < iterations; j++);
 	}
 }

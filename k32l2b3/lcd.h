@@ -1,9 +1,20 @@
 #ifndef LCD_H
 #define LCD_H
 
-#include "k32_api/port.h"
+#include "port.h"
 
-#define LCD_MODE_4_BITS 		1
+#define LCD_MODE_4_BITS
+
+typedef enum {
+	lcdCUSTOM_CHAR_1,
+	lcdCUSTOM_CHAR_2,
+	lcdCUSTOM_CHAR_3,
+	lcdCUSTOM_CHAR_4,
+	lcdCUSTOM_CHAR_5,
+	lcdCUSTOM_CHAR_6,
+	lcdCUSTOM_CHAR_7,
+	lcdCUSTOM_CHAR_8
+} lcd_custom_char;
 
 typedef struct {
 	#ifdef LCD_MODE_4_BITS
@@ -33,8 +44,7 @@ extern void lcdScrollLeft(lcd_handler_t *lcd);
 
 extern void lcdScrollRight(lcd_handler_t *lcd);
 
-
-extern void lcdCreateChar(lcd_handler_t *lcd, uint8_t location, char *char_map);
+extern void lcdCreateChar(lcd_handler_t *lcd, lcd_custom_char custom_char, char *char_map);
 
 extern void lcdCreateBigNumbers(lcd_handler_t *lcd);
 
