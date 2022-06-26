@@ -1,9 +1,7 @@
-
-
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#include <k32_api/port.h>
+#include <k32l2b3/port.h>
 
 #define CLK_SOURCE_LIRCLK_2MHz_FREQ		2000000L
 #define CLK_SOURCE_LIRCLK_8MHz_FREQ		8000000L
@@ -15,7 +13,11 @@ typedef enum {
 	clkPORT_B = 10,
 	clkPORT_C = 11,
 	clkPORT_D = 12,
-	clkPORT_E = 13
+	clkPORT_E = 13,
+	clkTPM_0 = 56,
+	clkTPM_1 = 57,
+	clkTPM_2 = 58,
+	clkADC_0 = 59
 } clock_peripheral;
 
 typedef enum {

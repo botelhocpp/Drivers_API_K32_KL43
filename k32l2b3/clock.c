@@ -1,4 +1,5 @@
-#include <k32_api/clock.h>
+#include <k32l2b3/clock.h>
+
 #include "K32L2B31A.h"
 
 #define SET_MASK(value, mask, starting_bit) ({\

@@ -37,11 +37,11 @@ pin_handler_t *drvGetButton(drv_button_id button);
 // =========================================================================
 
 /*!
- * @brief Initializes the CPU clock as 48 MHz.
+ * @brief Initializes the CPU clock as 8 MHz.
  */
 void drvCpuClockInit(void) {
-	clkEnableClock(clkSOURCE_HIRCLK);
-	clkSetMainClock(clkSOURCE_HIRCLK);
+	clkEnableClock(clkSOURCE_LIRCLK_8MHz);
+	clkSetMainClock(clkSOURCE_LIRCLK_8MHz);
 }
 
 /*!

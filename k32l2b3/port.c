@@ -5,9 +5,8 @@
  * @author  Pedro Botelho
  */
 
-#include <k32_api/clock.h>
-#include <k32_api/port.h>
-
+#include <k32l2b3/clock.h>
+#include <k32l2b3/port.h>
 #include "K32L2B31A.h"
 
 #include <stdint.h>
@@ -15,6 +14,12 @@
 
 
 static PORT_Type *pin_ports[5] = {PORTA, PORTB, PORTC, PORTD, PORTE};
+
+// ================================================================================
+// PRIVATE FUNCTIONS PROTOTYPES
+// ================================================================================
+
+PORT_Type *portGetPinPort(pin_handler_t *io_pin);
 
 // ================================================================================
 // VALIDATION FUNCTIONS
@@ -43,23 +48,32 @@ void portInitPort(pin_port port) {
 	clkEnablePeripheralClock(clkPORT_A + port);
 }
 
-void portSetMuxGpio(pin_handler_t *io_pin) {
-	if(!portPinValidate(io_pin)) {
+void portSetPinMux(pin_port port, uint8_t pin_number, pin_mux pin_function) {
+	if(!portPinNumberValidate(pin_number) || !portPortValidate(port)) {
 		while(1);
 	}
-	PORT_Type *pinPort = pin_ports[io_pin->port];
-	pinPort->PCR[io_pin->pin] &= ~(0b110 << 8);
-	pinPort->PCR[io_pin->pin] |=  (0b001 << 8);
+	portInitPort(port);
+	PORT_Type *pinPort = pin_ports[port];
+	pinPort->PCR[pin_number] &= ~(~pin_function << 8);
+	pinPort->PCR[pin_number] |=  (pin_function << 8);
+}
+
+void portSetMux(pin_handler_t *io_pin, pin_mux pin_function) {
+	PORT_Type *pinPort = portGetPinPort(io_pin);
+	// 0b0000_0101_0000_0000
+	pinPort->PCR[io_pin->pin] &= ~(~pin_function << 8);
+	pinPort->PCR[io_pin->pin] |=  ( pin_function << 8);
+}
+
+void portSetMuxGpio(pin_handler_t *io_pin) {
+	portSetMux(io_pin, pinMUX_ALT_1);
 }
 
 void portConfigInterrupt(pin_handler_t *inputPin, port_interrupt interrupt) {
-	if(!portPinValidate(inputPin)) {
-		while(1);
-	}
 	if(interrupt < portINT_LOGIC_0 || interrupt > portINT_LOGIC_1) {
 		while(1);
 	}
-	PORT_Type *pinPort = pin_ports[inputPin->port];
+	PORT_Type *pinPort = portGetPinPort(inputPin);
 	pinPort->PCR[inputPin->pin] |= (interrupt << 16);
 	pinPort->PCR[inputPin->pin] &= ~(~interrupt << 16);
 
@@ -78,11 +92,8 @@ void portConfigInterrupt(pin_handler_t *inputPin, port_interrupt interrupt) {
 
 
 void portConfigPullup(pin_handler_t *inputPin) {
-	if(!portPinValidate(inputPin)) {
-		while(1);
-	}
-	PORT_Type *pinPort = pin_ports[inputPin->port];
-	pinPort->PCR[inputPin->pin] |= (1U << 1);
+	PORT_Type *pinPort = portGetPinPort(inputPin);
+	pinPort->PCR[inputPin->pin] |= (1U << 4) | (1U << 1);
 	pinPort->PCR[inputPin->pin] |= (1U << 0);
 }
 
@@ -91,14 +102,27 @@ void portConfigPullup(pin_handler_t *inputPin) {
 // ================================================================================
 
 bool portCheckInterrupt(pin_handler_t *io_pin) {
-	if(!portPinValidate(io_pin)) {
-		while(1);
-	}
-	PORT_Type *pinPort = pin_ports[io_pin->port];
+	PORT_Type *pinPort = portGetPinPort(io_pin);
 	if(pinPort->PCR[io_pin->pin] & (1U << 24)) {
 		pinPort->PCR[io_pin->pin] |= (1U << 24);
 		return true;
 	}
 	return false;
+}
+
+void portClearInterrupt(pin_handler_t *io_pin) {
+	PORT_Type *pinPort = portGetPinPort(io_pin);
+	pinPort->ISFR |= (1U << io_pin->pin);
+}
+
+// ================================================================================
+// PRIVATE FUNCTIONS IMPLEMENTATION
+// ================================================================================
+
+PORT_Type *portGetPinPort(pin_handler_t *io_pin) {
+	if(!portPinValidate(io_pin)) {
+		while(1);
+	}
+	return pin_ports[io_pin->port];
 }
 

@@ -14,6 +14,17 @@
 #include <stdbool.h>
 
 typedef enum {
+	pinMUX_ALT_0 = 0b000,
+	pinMUX_ALT_1 = 0b001,
+	pinMUX_ALT_2 = 0b010,
+	pinMUX_ALT_3 = 0b011,
+	pinMUX_ALT_4 = 0b100,
+	pinMUX_ALT_5 = 0b101,
+	pinMUX_ALT_6 = 0b110,
+	pinMUX_ALT_7 = 0b111
+} pin_mux;
+
+typedef enum {
 	portINT_LOGIC_0 = 0b1000,
 	portINT_RISING_EDGE = 0b1001,
 	portINT_FALLING_EDGE = 0b1010,
@@ -50,6 +61,10 @@ extern bool portPinValidate(pin_handler_t *io_pin);
 
 extern void portInitPort(pin_port port);
 
+extern void portSetPinMux(pin_port port, uint8_t pin_number, pin_mux pin_function);
+
+extern void portSetMux(pin_handler_t *io_pin, pin_mux pin_function);
+
 extern void portSetMuxGpio(pin_handler_t *io_pin);
 
 extern void portConfigInterrupt(pin_handler_t *inputPin, port_interrupt interrupt);
@@ -61,5 +76,7 @@ extern void portConfigPullup(pin_handler_t *inputPin);
 // ================================================================================
 
 extern bool portCheckInterrupt(pin_handler_t *io_pin);
+
+extern void portClearInterrupt(pin_handler_t *io_pin);
 
 #endif

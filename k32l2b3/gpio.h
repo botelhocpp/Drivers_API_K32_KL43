@@ -9,8 +9,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include <k32_api/port.h>
-
+#include <k32l2b3/port.h>
 #include "K32L2B31A.h"
 
 // ================================================================================

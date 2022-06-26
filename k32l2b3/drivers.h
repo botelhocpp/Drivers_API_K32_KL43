@@ -42,7 +42,7 @@ typedef enum {
 } drv_led_level;
 
 /*!
- * @brief Initializes the CPU clock as 48 MHz.
+ * @brief Initializes the CPU clock as 8 MHz.
  */
 extern void drvCpuClockInit(void);
 

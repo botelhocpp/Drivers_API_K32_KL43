@@ -1,5 +1,5 @@
-#include "delay.h"
-#include "clock.h"
+#include <k32l2b3/clock.h>
+#include <k32l2b3/delay.h>
 
 /**!
  * @brief 	Makes the CPU wait for a given time in

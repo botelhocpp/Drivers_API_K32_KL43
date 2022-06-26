@@ -6,9 +6,8 @@
  * @author  Pedro Botelho
  */
 
-#include <k32_api/gpio.h>
-#include <k32_api/port.h>
-
+#include <k32l2b3/gpio.h>
+#include <k32l2b3/port.h>
 #include "K32L2B31A.h"
 
 #include <stdint.h>
