@@ -138,10 +138,6 @@ void lcdSendBits(lcd_handler_t *lcd, uint8_t byte);
 
 void lcdEnablePulse(lcd_handler_t *lcd);
 
-void delay_ms(uint32_t ms);
-
-void delay_us(uint32_t us);
-
 // ==========================================================================
 // PUBLIC FUNCTIONS IMPLEMENTATION
 // ==========================================================================

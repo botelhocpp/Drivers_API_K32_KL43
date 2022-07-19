@@ -33,3 +33,29 @@ void adcInitModule(adc_config_t *adc) {
 			ADC0->SC2 | (1U << 4) :
 			ADC0->SC2 & ~(1U << 4);
 }
+
+bool adcCalibrate(void) {
+	uint16_t calib;
+
+	ADC0->SC3 |= (1 << 7);
+
+	while (ADC0->SC3 & (1 << 7));
+	
+	if (ADC0->SC3 & (1 << 6)) {
+		return false;
+	}
+
+	calib = 0;
+	calib += ADC0->CLPS + ADC0->CLP4 + ADC0->CLP3 + ADC0->CLP2 + ADC0->CLP1 + ADC0->CLP0;
+	calib /= 2;
+	calib |= (1U << 15);
+	ADC0->PG = calib;
+
+	calib = 0;
+	calib += ADC0->CLMS + ADC0->CLM4 + ADC0->CLM3 + ADC0->CLM2 + ADC0->CLM1 + ADC0->CLM0;
+	calib /= 2;
+	calib |= (1U << 15);
+	ADC0->MG = calib;
+
+	return true;
+}

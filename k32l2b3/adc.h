@@ -46,4 +46,6 @@ void adcInitModule(adc_config_t *adc);
 
 long adcReadInput(adc_channel channel);
 
+bool adcCalibrate(void);
+
 #endif
