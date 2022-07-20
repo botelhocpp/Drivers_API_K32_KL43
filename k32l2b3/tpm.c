@@ -40,14 +40,35 @@ void tpmInitModule(tpm_handler_t *tpm) {
 	tpm_reg->MOD = tpm->mod;
 	tpm_reg->CONTROLS[tpm->channel].CnV = tpm->cnv;
 	tpm_reg->CONTROLS[tpm->channel].CnSC = (tpm->channel_mode << 2);
-	TPM0->SC = (tpm->ps << 0);
+	tpm_reg->SC = (tpm->ps << 0);
+}
+
+void tpmSetModuleValue(tpm_handler_t *tpm, uint16_t module_value) {
+	if(tpm->module > tpmMODULE_2 || tpm->module < tpmMODULE_0) {
+		while(1);
+	}
+	tpmGetTpmModule(tpm->module)->MOD = module_value;
+}
+
+uint16_t tpmGetModuleValue(tpm_handler_t *tpm) {
+	if(tpm->module > tpmMODULE_2 || tpm->module < tpmMODULE_0) {
+		while(1);
+	}
+	return tpmGetTpmModule(tpm->module)->MOD;
 }
 
 void tpmSetChannelValue(tpm_handler_t *tpm, uint16_t channel_value) {
-	if(tpm->channel > tpmCHANNEL_5 || tpm->channel < tpmCHANNEL_0) {
+	if(tpm->module > tpmMODULE_2 || tpm->module < tpmMODULE_0 || tpm->channel > tpmCHANNEL_5 || tpm->channel < tpmCHANNEL_0) {
 		while(1);
 	}
 	tpmGetTpmModule(tpm->module)->CONTROLS[tpm->channel].CnV = channel_value;
+}
+
+uint16_t tpmGetChannelValue(tpm_handler_t *tpm) {
+	if(tpm->module > tpmMODULE_2 || tpm->module < tpmMODULE_0 || tpm->channel > tpmCHANNEL_5 || tpm->channel < tpmCHANNEL_0) {
+		while(1);
+	}
+	return tpmGetTpmModule(tpm->module)->CONTROLS[tpm->channel].CnV;
 }
 
 void tpmStartTimer(tpm_handler_t *tpm) {

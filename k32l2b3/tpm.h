@@ -66,7 +66,13 @@ extern void tpmGetDefaultConfig(tpm_handler_t *tpm);
 
 extern void tpmInitModule(tpm_handler_t *tpm);
 
+extern void tpmSetModuleValue(tpm_handler_t *tpm, uint16_t module_value);
+
+extern uint16_t tpmGetModuleValue(tpm_handler_t *tpm);
+
 extern void tpmSetChannelValue(tpm_handler_t *tpm, uint16_t channel_value);
+
+extern uint16_t tpmGetChannelValue(tpm_handler_t *tpm);
 
 extern void tpmStartTimer(tpm_handler_t *tpm);
 
