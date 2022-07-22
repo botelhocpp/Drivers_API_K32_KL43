@@ -24,7 +24,10 @@ void adcGetDefaultConfig(adc_config_t *adc) {
 void adcInitModule(adc_config_t *adc) {
 	clkEnablePeripheralClock(clkADC_0);
 
-	ADC0->SC3 |= (adc->sample_number << 0);
+	if(adc->sample_number != -1) {
+		ADC0->SC3 |= (1U << 2) | (adc->sample_number << 0);
+	}
+
 	ADC0->CFG1 |= (adc->clock_div << 5) | (adc->resolution << 2) | (adc->input_clock << 0);
 
 	ADC0->SC2 = (adc->hardware_trigger) ?

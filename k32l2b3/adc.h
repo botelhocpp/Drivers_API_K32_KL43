@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 typedef enum {
+	adcSAMPLE_NUMBER_0 = -1,
 	adcSAMPLE_NUMBER_4,
 	adcSAMPLE_NUMBER_8,
 	adcSAMPLE_NUMBER_16,
