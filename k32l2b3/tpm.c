@@ -23,8 +23,6 @@ void tpmGetDefaultConfig(tpm_handler_t *tpm) {
 	tpm->module = tpmMODULE_0;
 	tpm->channel = tpmCHANNEL_0;
 	tpm->clk = tpmCLOCK_MCGPCLK;
-	tpm->mod = 0;
-	tpm->cnv = 0;
 	tpm->ps = tpmPRESCALER_128;
 	tpm->channel_mode = tpmCHANNEL_DISABLED;
 }
@@ -37,8 +35,6 @@ void tpmInitModule(tpm_handler_t *tpm) {
 	TPM_Type *tpm_reg = tpmGetTpmModule(tpm->module);
 
 	tpm_reg->SC = 0;
-	tpm_reg->MOD = tpm->mod;
-	tpm_reg->CONTROLS[tpm->channel].CnV = tpm->cnv;
 	tpm_reg->CONTROLS[tpm->channel].CnSC = (tpm->channel_mode << 2);
 	tpm_reg->SC = (tpm->ps << 0);
 }

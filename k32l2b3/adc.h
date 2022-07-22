@@ -28,16 +28,29 @@ typedef enum {
 	adcCHANNEL_0,
 	adcCHANNEL_1,
 	adcCHANNEL_2,
-	adcCHANNEL_3
+	adcCHANNEL_3,
+	adcCHANNEL_4,
+	adcCHANNEL_5,
+	adcCHANNEL_6,
+	adcCHANNEL_7,
+	adcCHANNEL_8,
+	adcCHANNEL_9
 } adc_channel;
 
+typedef enum {
+	adcCLOCK_BUS,
+	adcCLOCK_BUS_DIV_2,
+	adcCLOCK_ALT,
+	adcCLOCK_ASYNC
+} adc_clock;
+
 typedef struct {
-	adc_channel channel;
 	adc_clock_div clock_div;
 	adc_sample_number sample_number;
 	bool long_sample_time;
 	adc_resolution resolution;
 	bool hardware_trigger;
+	adc_clock input_clock;
 } adc_config_t;
 
 void adcGetDefaultConfig(adc_config_t *adc);

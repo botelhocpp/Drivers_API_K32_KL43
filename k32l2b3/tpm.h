@@ -56,8 +56,6 @@ typedef struct {
 	tpm_module module;
 	tpm_channel channel;
 	tpm_clock clk;
-	uint16_t mod;
-	uint16_t cnv;
 	tpm_prescaler ps;
 	tpm_channel_mode channel_mode;
 } tpm_handler_t;
