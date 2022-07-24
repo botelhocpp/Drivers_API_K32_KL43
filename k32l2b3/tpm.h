@@ -2,6 +2,23 @@
 #define TPM_H
 
 #include <stdbool.h>
+#include <stdint.h>
+
+#define TPM_CHANNEL_NUMBER 		6
+#define TPM_MODULE_NUMBER 		3
+
+/**
+ * Enables safe mode, if it is 1, which
+ * means that updating the channel value
+ * does not reset the count (to speed up
+ * the update), which happens to a value
+ * of 0.
+ * If 2 the ultra safe mode is
+ * activated, which waits for the update
+ * happens, which implements a delay in
+ * the program.
+ */
+#define TPM_MODULE_SAFE_MODE	0
 
 typedef enum {
 	tpmCHANNEL_DISABLED = 0b0000,
@@ -64,6 +81,8 @@ extern void tpmGetDefaultConfig(tpm_handler_t *tpm);
 
 extern void tpmInitModule(tpm_handler_t *tpm);
 
+uint32_t tpmGetSourceClock(tpm_handler_t *tpm);
+
 extern void tpmSetModuleValue(tpm_handler_t *tpm, uint16_t module_value);
 
 extern uint16_t tpmGetModuleValue(tpm_handler_t *tpm);
@@ -71,6 +90,8 @@ extern uint16_t tpmGetModuleValue(tpm_handler_t *tpm);
 extern void tpmSetChannelValue(tpm_handler_t *tpm, uint16_t channel_value);
 
 extern uint16_t tpmGetChannelValue(tpm_handler_t *tpm);
+
+void tpmSetDutyCycle(tpm_handler_t *tpm, uint8_t duty_cycle_percent);
 
 extern void tpmStartTimer(tpm_handler_t *tpm);
 

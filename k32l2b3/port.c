@@ -93,7 +93,7 @@ void portConfigInterrupt(pin_handler_t *inputPin, port_interrupt interrupt) {
 
 void portConfigPullup(pin_handler_t *inputPin) {
 	PORT_Type *pinPort = portGetPinPort(inputPin);
-	pinPort->PCR[inputPin->pin] |= (1U << 4) | (1U << 1);
+	pinPort->PCR[inputPin->pin] |= (1U << 1);
 	pinPort->PCR[inputPin->pin] |= (1U << 0);
 }
 
@@ -103,11 +103,7 @@ void portConfigPullup(pin_handler_t *inputPin) {
 
 bool portCheckInterrupt(pin_handler_t *io_pin) {
 	PORT_Type *pinPort = portGetPinPort(io_pin);
-	if(pinPort->PCR[io_pin->pin] & (1U << 24)) {
-		pinPort->PCR[io_pin->pin] |= (1U << 24);
-		return true;
-	}
-	return false;
+	return pinPort->ISFR & (1U << io_pin->pin);
 }
 
 void portClearInterrupt(pin_handler_t *io_pin) {

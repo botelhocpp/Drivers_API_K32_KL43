@@ -43,8 +43,10 @@ extern void clkEnableClock(clock_source clock_source);
 
 extern void clkSetMainClock(clock_source clock_source);
 
-extern long clkGetMainClock();
+extern uint32_t clkGetMainClock(void);
 
-extern long clkGetERClock();
+extern uint32_t clkGetERClock(void);
+
+extern uint32_t clkGetIRClock(void);
 
 #endif

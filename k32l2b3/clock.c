@@ -87,7 +87,7 @@ void clkSetMainClock(clock_source clock_source) {
 	}
 }
 
-long clkGetMainClock() {
+uint32_t clkGetMainClock(void) {
 	int clock_status = (MCG->S & 0b11U << 2) >> 2;
 	switch(clock_status) {
 		case 0:
@@ -113,13 +113,19 @@ long clkGetMainClock() {
 	return 0;
 }
 
-long clkGetERClock() {
-	if(MCG->C2 & 1U << 2) {
+uint32_t clkGetERClock(void) {
+	if(MCG->C2 & (1U << 2)) {
 		return (OSC0->CR & (1U << 7)) ? CLK_SOURCE_OSCERCLK_FREQ : 0;
 	}
 	// EXTERNAL CLOCK
 	else {
 		// TODO
+	}
+}
+
+uint32_t clkGetIRClock(void) {
+	if(MCG->C1 & (1U << 1)) {
+		return (MCG->C2 & (1U << 0)) ? CLK_SOURCE_LIRCLK_8MHz_FREQ : CLK_SOURCE_LIRCLK_2MHz_FREQ;
 	}
 	return 0;
 }
